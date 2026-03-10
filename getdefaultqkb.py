@@ -83,11 +83,19 @@ def get_cas_qkb():
     cas_info = {"language": None, "locale": None}
 
     configurationproperty_cas = getconfigurationproperty(configurationdef_cas)
-    first_item = configurationproperty_cas["items"][0]
-    props = first_item.get("properties", {})
-    contents = props.get("contents", "")
+    if not configurationproperty_cas or "items" not in configurationproperty_cas:
+            return cas_info
+    
+    # Find item where config name == "config"
+    cas_contents = ""
+    for item in configurationproperty_cas["items"]:
+        props = item.get("properties", {})
+        config_name = props.get("name", "")
+        if config_name == "config":
+            cas_contents = props.get("contents", "")
+            break    
 
-    parsed = parse_cas_qkb(contents)
+    parsed = parse_cas_qkb(cas_contents)
     cas_info.update(parsed)
     return cas_info
 
@@ -98,11 +106,19 @@ def get_compute_qkb():
     compute_info = {"language": None, "locale": None}
 
     configurationproperty_compute = getconfigurationproperty(configurationdef_compute)
-    first_item = configurationproperty_compute["items"][0]
-    props = first_item.get("properties", {})
-    contents = props.get("contents", "")
+    if not configurationproperty_compute or "items" not in configurationproperty_compute:
+        return compute_info
 
-    parsed = parse_compute_qkb(contents)
+    # Find item where config name == "config_options"
+    compute_contents = ""
+    for item in configurationproperty_compute["items"]:
+        props = item.get("properties", {})
+        config_name = props.get("name", "")
+        if config_name == "config_options":
+            compute_contents = props.get("contents", "")
+            break
+
+    parsed = parse_compute_qkb(compute_contents)
     compute_info.update(parsed)
     return compute_info
 
