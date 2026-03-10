@@ -154,7 +154,6 @@ def main():
     )
 
     args = parser.parse_args()
-    configurationdef=args.configuration
     output_style=args.output
 
     # If no engine specified, default to both
