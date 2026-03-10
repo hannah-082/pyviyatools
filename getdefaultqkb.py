@@ -114,7 +114,7 @@ def get_compute_qkb():
     for item in configurationproperty_compute["items"]:
         props = item.get("properties", {})
         config_name = props.get("name", "")
-        if config_name == "config_options":
+        if config_name == "configuration_options":
             compute_contents = props.get("contents", "")
             break
 
