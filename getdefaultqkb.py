@@ -52,8 +52,9 @@ def parse_compute_qkb(contents):
     Parse the Compute QKB settings from the sas.compute.server contents.
 
     Expects tokens like:
-        -DQSETUPLOC "DefaultQKBName"
-        -DQLOCALE "DefaultLocale"
+        -DQLOCALE (DefaultLocale)
+        -DQSETUPLOC 'DefaultQKBName'
+        
     """
     language = None
     locale = None
@@ -66,34 +67,22 @@ def parse_compute_qkb(contents):
     for i, tok in enumerate(tokens):
         if tok.startswith("-DQSETUPLOC"):
             if i + 1 < len(tokens):
-                value = tokens[i + 1].strip().strip('"')
+                value = tokens[i + 1].strip().strip("'")
                 language = value
         elif tok.startswith("-DQLOCALE"):
             if i + 1 < len(tokens):
-                value = tokens[i + 1].strip().strip('"')
+                value = tokens[i + 1].strip().strip('()')
                 locale = value
 
     return {"language": language, "locale": locale}
 
 # Write conditions to only retrieve the ones we need
 def get_cas_qkb():
-    """Get CAS QKB info as a dict with basic error handling."""
+    """Get CAS QKB info."""
     configurationdef_cas = "sas.cas.instance.config"
     cas_info = {"language": None, "locale": None}
 
-    try:
-        configurationproperty_cas = getconfigurationproperty(configurationdef_cas)
-    except Exception as e:
-        # In pyviyatools, failures are often returned as text JSON via printresult.[web:1][web:18]
-        cas_info["error"] = "Failed to retrieve CAS configuration: {0}".format(e)
-        return cas_info
-
-    if not configurationproperty_cas or "items" not in configurationproperty_cas:
-        cas_info["error"] = "No CAS configuration items found for definition {0}".format(
-            configurationdef_cas
-        )
-        return cas_info
-
+    configurationproperty_cas = getconfigurationproperty(configurationdef_cas)
     first_item = configurationproperty_cas["items"][0]
     props = first_item.get("properties", {})
     contents = props.get("contents", "")
@@ -104,26 +93,11 @@ def get_cas_qkb():
 
 
 def get_compute_qkb():
-    """Get Compute QKB info as a dict with basic error handling."""
+    """Get Compute QKB info."""
     configurationdef_compute = "sas.compute.server"
     compute_info = {"language": None, "locale": None}
 
-    try:
-        configurationproperty_compute = getconfigurationproperty(configurationdef_compute)
-    except Exception as e:
-        compute_info["error"] = (
-            "Failed to retrieve Compute configuration: {0}".format(e)
-        )
-        return compute_info
-
-    if not configurationproperty_compute or "items" not in configurationproperty_compute:
-        compute_info["error"] = (
-            "No Compute configuration items found for definition {0}".format(
-                configurationdef_compute
-            )
-        )
-        return compute_info
-
+    configurationproperty_compute = getconfigurationproperty(configurationdef_compute)
     first_item = configurationproperty_compute["items"][0]
     props = first_item.get("properties", {})
     contents = props.get("contents", "")
