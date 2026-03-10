@@ -1,12 +1,26 @@
-from __future__ import print_function
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# getdefaultqkb.py
+# February 2026
+#
+# Get current default QKB settings as defined in Environment Manager.  
+# Optional choose which engine to return (CAS or compute) defaults to both
+#
+# Change History
+#
+# 02FEB2026 Initial version
 
+# Import Python modules
+from __future__ import print_function
 import argparse
-import json
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 import sys
 
-from sharedfunctions import getconfigurationproperty, printresult
+from sharedfunctions import callrestapi, printresult, getconfigurationproperty
 
-
+# Get current state for cas or compute depending on value in --engine
 def parse_cas_qkb(contents):
     """
     Parse the CAS QKB settings from the sas.cas.instance.config contents.
@@ -61,7 +75,7 @@ def parse_compute_qkb(contents):
 
     return {"language": language, "locale": locale}
 
-
+# Write conditions to only retrieve the ones we need
 def get_cas_qkb():
     """Get CAS QKB info as a dict with basic error handling."""
     configurationdef_cas = "sas.cas.instance.config"
@@ -120,6 +134,7 @@ def get_compute_qkb():
 
 
 def main():
+    # Set input parameters
     parser = argparse.ArgumentParser(
         description="Get default QKB setting for SAS CAS and Compute engines"
     )
@@ -127,13 +142,20 @@ def main():
         "--engine",
         nargs="*",
         choices=["cas", "compute"],
+        required='True',
         help=(
             "Engine(s) to query: cas, compute. "
             "If omitted, both are returned."
         ),
     )
 
+    parser.add_argument(
+        "-o","--output", help="Output Style", choices=['csv','json','simple','simplejson'],default='json'
+    )
+
     args = parser.parse_args()
+    configurationdef=args.configuration
+    output_style=args.output
 
     # If no engine specified, default to both
     engines = args.engine if args.engine else ["cas", "compute"]
@@ -146,8 +168,8 @@ def main():
     if "compute" in engines:
         results["compute"] = get_compute_qkb()
 
-    # Output JSON in the same style as other pyviyatools scripts.[web:1][web:18]
-    printresult(json.dumps(results, indent=4))
+    # Output JSON in the same style as other pyviyatools scripts.
+    printresult(results, output_style)
 
 
 if __name__ == "__main__":
