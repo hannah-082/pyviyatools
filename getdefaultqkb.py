@@ -89,10 +89,9 @@ def get_cas_qkb():
     # Find item where config name == "config"
     cas_contents = ""
     for item in configurationproperty_cas["items"]:
-        props = item.get("properties", {})
-        config_name = props.get("name", "")
+        config_name = item.get("name", "")
         if config_name == "config":
-            cas_contents = props.get("contents", "")
+            cas_contents = item.get("contents", "")
             break    
 
     parsed = parse_cas_qkb(cas_contents)
@@ -109,13 +108,12 @@ def get_compute_qkb():
     if not configurationproperty_compute or "items" not in configurationproperty_compute:
         return compute_info
 
-    # Find item where config name == "config_options"
+    # Find item where config name == "configuration_options"
     compute_contents = ""
     for item in configurationproperty_compute["items"]:
-        props = item.get("properties", {})
-        config_name = props.get("name", "")
+        config_name = item.get("name", "")
         if config_name == "configuration_options":
-            compute_contents = props.get("contents", "")
+            compute_contents = item.get("contents", "")
             break
 
     parsed = parse_compute_qkb(compute_contents)
