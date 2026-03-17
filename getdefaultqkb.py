@@ -33,7 +33,7 @@ def parse_cas_qkb(contents):
     qkb = None
 
     if not contents:
-        return {"locale": locale, "Default QKB": qkb}
+        return {"locale": locale, "default QKB": qkb}
 
     for line in contents.splitlines():
 
@@ -51,7 +51,7 @@ def parse_cas_qkb(contents):
             if first != -1 and last != -1 and last > first:
                 qkb = line[first + 1:last]
 
-    return {"locale": locale, "Default QKB": qkb}
+    return {"locale": locale, "default QKB": qkb}
 
 
 def parse_compute_qkb(contents):
@@ -66,7 +66,7 @@ def parse_compute_qkb(contents):
     qkb = None
 
     if not contents:
-        return {"locale": locale, "Default QKB": qkb}
+        return {"locale": locale, "default QKB": qkb}
 
     for line in contents.splitlines():
         line = line.strip()
@@ -85,13 +85,13 @@ def parse_compute_qkb(contents):
             if first != -1 and last != -1 and last > first:
                 qkb = line[first + 1:last]
 
-    return {"locale": locale, "Default QKB": qkb}
+    return {"locale": locale, "default QKB": qkb}
 
 # Write conditions to only retrieve the ones we need
 def get_cas_qkb():
     """Get CAS QKB info."""
     configurationdef_cas = "sas.cas.instance.config"
-    cas_info = {"language": None, "locale": None}
+    cas_info = {"locale": None, "default QKB": None}
 
     configurationproperty_cas = getconfigurationproperty(configurationdef_cas)
     if not configurationproperty_cas or "items" not in configurationproperty_cas:
@@ -113,7 +113,7 @@ def get_cas_qkb():
 def get_compute_qkb():
     """Get Compute QKB info."""
     configurationdef_compute = "sas.compute.server"
-    compute_info = {"language": None, "locale": None}
+    compute_info = {"locale": None, "default QKB": None}
 
     configurationproperty_compute = getconfigurationproperty(configurationdef_compute)
     if not configurationproperty_compute or "items" not in configurationproperty_compute:
