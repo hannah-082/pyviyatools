@@ -26,25 +26,32 @@ def parse_cas_qkb(contents):
     Parse the CAS QKB settings from the sas.cas.instance.config contents.
 
     Expects lines like:
-        cas.DQSETUPLOC="DefaultQKBName"
-        cas.DQLOCALE="DefaultLocale"
+        cas.DQLOCALE="ENUSA" --LOCALE
+        cas.DQSETUPLOC="QKB CI 33" --QKB NAME
     """
-    language = None
     locale = None
+    qkb = None
 
     if not contents:
-        return {"language": language, "locale": locale}
+        return {"locale": locale, "Default QKB": qkb}
 
     for line in contents.splitlines():
-        line = line.strip()
-        if line.startswith("cas.DQSETUPLOC"):
-            _, value = line.split("=", 1)
-            language = value.strip().strip('"')
-        elif line.startswith("cas.DQLOCALE"):
-            _, value = line.split("=", 1)
-            locale = value.strip().strip('"')
 
-    return {"language": language, "locale": locale}
+        # Parse DQLOCALE: anything inside parentheses
+        if "cas.DQLOCALE" in line:
+            first = line.find('"')
+            last = line.rfind('"')
+            if first != -1 and last != -1 and last > first:
+                locale = line[first + 1:last]
+        
+         # Parse DQSETUPLOC: anything inside single quotes
+        if "cas.DQSETUPLOC" in line:
+            first = line.find('"')
+            last = line.rfind('"')
+            if first != -1 and last != -1 and last > first:
+                qkb = line[first + 1:last]
+
+    return {"locale": locale, "Default QKB": qkb}
 
 
 def parse_compute_qkb(contents):
@@ -52,29 +59,33 @@ def parse_compute_qkb(contents):
     Parse the Compute QKB settings from the sas.compute.server contents.
 
     Expects tokens like:
-        -DQLOCALE (DefaultLocale)
-        -DQSETUPLOC 'DefaultQKBName'
-        
+        -DQLOCALE (ENUSA) --LOCALE
+        -DQSETUPLOC 'QKB CI 33' --QKB NAME
     """
-    language = None
     locale = None
+    qkb = None
 
     if not contents:
-        return {"language": language, "locale": locale}
+        return {"locale": locale, "Default QKB": qkb}
 
-    tokens = contents.split()
+    for line in contents.splitlines():
+        line = line.strip()
 
-    for i, tok in enumerate(tokens):
-        if tok.startswith("-DQSETUPLOC"):
-            if i + 1 < len(tokens):
-                value = tokens[i + 1].strip().strip("'")
-                language = value
-        elif tok.startswith("-DQLOCALE"):
-            if i + 1 < len(tokens):
-                value = tokens[i + 1].strip().strip('()')
-                locale = value
+        # Parse DQLOCALE: anything inside parentheses
+        if "-DQLOCALE" in line:
+            first = line.find("(")
+            last = line.rfind(")")
+            if first != -1 and last != -1 and last > first:
+                locale = line[first + 1:last]
+        
+         # Parse DQSETUPLOC: anything inside single quotes
+        if "-DQSETUPLOC" in line:
+            first = line.find("'")
+            last = line.rfind("'")
+            if first != -1 and last != -1 and last > first:
+                qkb = line[first + 1:last]
 
-    return {"language": language, "locale": locale}
+    return {"locale": locale, "Default QKB": qkb}
 
 # Write conditions to only retrieve the ones we need
 def get_cas_qkb():
