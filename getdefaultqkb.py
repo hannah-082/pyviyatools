@@ -24,7 +24,7 @@ def parse_cas_qkb(contents):
     """
     Parse the CAS QKB settings from the sas.cas.instance.config contents.
 
-    Expects lines like:
+    Expects:
         cas.DQLOCALE="ENUSA" --LOCALE
         cas.DQSETUPLOC="QKB CI 33" --QKB NAME
     """
@@ -57,7 +57,7 @@ def parse_compute_qkb(contents):
     """
     Parse the Compute QKB settings from the sas.compute.server contents.
 
-    Expects tokens like:
+    Expects:
         -DQLOCALE (ENUSA) --LOCALE
         -DQSETUPLOC 'QKB CI 33' --QKB NAME
     """
