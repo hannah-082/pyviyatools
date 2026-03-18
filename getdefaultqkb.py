@@ -16,7 +16,6 @@ from __future__ import print_function
 import argparse
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
-import sys
 
 from sharedfunctions import callrestapi, printresult, getconfigurationproperty
 
@@ -168,11 +167,3 @@ def main():
 
     # Output JSON in the same style as other pyviyatools scripts.
     printresult(results, output_style)
-
-
-if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        # Common pattern in CLI tools: exit cleanly on Ctrl+C
-        sys.exit(1)
