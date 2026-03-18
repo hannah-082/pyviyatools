@@ -168,5 +168,5 @@ def main():
     # Output JSON in the same style as other pyviyatools scripts
     printresult(results, output_style)
 
-    # Call main function
+if __name__ == "__main__":
     main()
