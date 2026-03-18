@@ -165,5 +165,8 @@ def main():
     if "compute" in engines:
         results["compute"] = get_compute_qkb()
 
-    # Output JSON in the same style as other pyviyatools scripts.
+    # Output JSON in the same style as other pyviyatools scripts
     printresult(results, output_style)
+
+    # Call main function
+    main()
