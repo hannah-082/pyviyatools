@@ -17,7 +17,7 @@ import argparse
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-from sharedfunctions import callrestapi, printresult, getconfigurationproperty
+from sharedfunctions import printresult, getconfigurationproperty
 
 # Get current state for cas or compute depending on value in --engine
 def parse_cas_qkb(contents):
