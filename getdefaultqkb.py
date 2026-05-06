@@ -32,25 +32,25 @@ def parse_cas_qkb(contents):
     qkb = None
 
     if not contents:
-        return {"locale": locale, "default QKB": qkb}
+        return {"locale": locale, "qkb": qkb}
 
     for line in contents.splitlines():
 
-        # Parse DQLOCALE: anything inside parentheses
+        # Parse DQLOCALE: anything inside double quotes
         if "cas.DQLOCALE" in line:
             first = line.find('"')
             last = line.rfind('"')
             if first != -1 and last != -1 and last > first:
                 locale = line[first + 1:last]
         
-         # Parse DQSETUPLOC: anything inside single quotes
+         # Parse DQSETUPLOC: anything inside double quotes
         if "cas.DQSETUPLOC" in line:
             first = line.find('"')
             last = line.rfind('"')
             if first != -1 and last != -1 and last > first:
                 qkb = line[first + 1:last]
 
-    return {"locale": locale, "default QKB": qkb}
+    return {"locale": locale, "qkb": qkb}
 
 
 def parse_compute_qkb(contents):
@@ -65,7 +65,7 @@ def parse_compute_qkb(contents):
     qkb = None
 
     if not contents:
-        return {"locale": locale, "default QKB": qkb}
+        return {"locale": locale, "qkb": qkb}
 
     for line in contents.splitlines():
         line = line.strip()
@@ -84,13 +84,13 @@ def parse_compute_qkb(contents):
             if first != -1 and last != -1 and last > first:
                 qkb = line[first + 1:last]
 
-    return {"locale": locale, "default QKB": qkb}
+    return {"locale": locale, "qkb": qkb}
 
-# Write conditions to only retrieve the ones we need
+
 def get_cas_qkb():
     """Get CAS QKB info."""
     configurationdef_cas = "sas.cas.instance.config"
-    cas_info = {"locale": None, "default QKB": None}
+    cas_info = {"locale": None, "qkb": None}
 
     configurationproperty_cas = getconfigurationproperty(configurationdef_cas)
     if not configurationproperty_cas or "items" not in configurationproperty_cas:
@@ -106,13 +106,17 @@ def get_cas_qkb():
 
     parsed = parse_cas_qkb(cas_contents)
     cas_info.update(parsed)
+
+    if cas_info["locale"] is None and cas_info["qkb"] is None:
+        cas_info["error"] = "No CAS QKB information found in configuration contents"
+    
     return cas_info
 
 
 def get_compute_qkb():
     """Get Compute QKB info."""
     configurationdef_compute = "sas.compute.server"
-    compute_info = {"locale": None, "default QKB": None}
+    compute_info = {"locale": None, "qkb": None}
 
     configurationproperty_compute = getconfigurationproperty(configurationdef_compute)
     if not configurationproperty_compute or "items" not in configurationproperty_compute:
@@ -128,6 +132,10 @@ def get_compute_qkb():
 
     parsed = parse_compute_qkb(compute_contents)
     compute_info.update(parsed)
+
+    if compute_info["locale"] is None and compute_info["qkb"] is None:
+        compute_info["error"] = "No compute QKB information found in configuration contents"
+    
     return compute_info
 
 
@@ -165,7 +173,6 @@ def main():
     if "compute" in engines:
         results["compute"] = get_compute_qkb()
 
-    # Output JSON in the same style as other pyviyatools scripts
     printresult(results, output_style)
 
 if __name__ == "__main__":
