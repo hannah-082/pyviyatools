@@ -109,7 +109,7 @@ def get_cas_qkb():
     cas_info.update(parsed)
 
     if cas_info["locale"] is None and cas_info["qkb"] is None:
-        print("❌ No CAS QKB information found in configuration contents",file=sys.stderr)
+        print("\n\n❌ No CAS QKB information found in configuration contents",file=sys.stderr)
         return cas_info
     
     return cas_info
@@ -136,7 +136,7 @@ def get_compute_qkb():
     compute_info.update(parsed)
 
     if compute_info["locale"] is None and compute_info["qkb"] is None:
-        print("❌ No Compute QKB information found", file=sys.stderr)
+        print("\n\n❌ No Compute QKB information found in configuration contents", file=sys.stderr)
         return compute_info
     
     return compute_info
