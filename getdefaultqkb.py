@@ -15,6 +15,7 @@
 from __future__ import print_function
 import argparse
 import pprint
+import sys
 pp = pprint.PrettyPrinter(indent=4)
 
 from sharedfunctions import printresult, getconfigurationproperty
@@ -108,7 +109,8 @@ def get_cas_qkb():
     cas_info.update(parsed)
 
     if cas_info["locale"] is None and cas_info["qkb"] is None:
-        raise SystemExit("❌ No CAS QKB information found in configuration contents")
+        print("❌ No CAS QKB information found in configuration contents",file=sys.stderr)
+        return cas_info
     
     return cas_info
 
@@ -134,7 +136,8 @@ def get_compute_qkb():
     compute_info.update(parsed)
 
     if compute_info["locale"] is None and compute_info["qkb"] is None:
-        raise SystemExit("❌ No Compute QKB information found in configuration contents")
+        print("❌ No Compute QKB information found", file=sys.stderr)
+        return compute_info
     
     return compute_info
 
@@ -148,7 +151,6 @@ def main():
         "--engine",
         nargs="*",
         choices=["cas", "compute"],
-        required='True',
         help=(
             "Engine(s) to query: cas, compute. "
             "If omitted, both are returned."
