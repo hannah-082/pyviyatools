@@ -108,7 +108,7 @@ def get_cas_qkb():
     cas_info.update(parsed)
 
     if cas_info["locale"] is None and cas_info["qkb"] is None:
-        cas_info["error"] = "No CAS QKB information found in configuration contents"
+        raise SystemExit("❌ No CAS QKB information found in configuration contents")
     
     return cas_info
 
@@ -134,7 +134,7 @@ def get_compute_qkb():
     compute_info.update(parsed)
 
     if compute_info["locale"] is None and compute_info["qkb"] is None:
-        compute_info["error"] = "No compute QKB information found in configuration contents"
+        raise SystemExit("❌ No Compute QKB information found in configuration contents")
     
     return compute_info
 
