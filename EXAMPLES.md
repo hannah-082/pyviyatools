@@ -373,3 +373,19 @@ For example:
 ./setcomputecontextattributes.py -n "Data Mining compute context" -a runAsUser -v sastest1
 ./setcomputecontextattributes.py -n "Data Mining compute context" -r runAsUser
 ```
+
+**setupcopilotcredentials.py**
+```bash
+./setupcopilotcredentials.py --client-id xxxxxxxxxx --client-secret xxxxxxxxxxxxxxxxx
+./setupcopilotcredentials.py --input-file /tmp/credentials.txt --force
+```
+
+**setconfigurationproperties.py**
+```bash
+python3 getconfigurationproperties.py -c server -o json \
+| jq '
+  .items[0]["servlet.session.timeout"] = "2700"
+  | .items[0]["http.session.maxAge"] = "2700"
+' \
+| python3 setconfigurationproperties.py
+```
