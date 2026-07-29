@@ -391,6 +391,7 @@ python3 getconfigurationproperties.py -c server -o json \
 ```
 
 **getdefaultqkb.py**
+
 ```bash
 python3 getdefaultqkb.py -o json
 python3 getdefaultqkb.py --engine cas -o json
