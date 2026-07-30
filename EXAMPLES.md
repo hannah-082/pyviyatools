@@ -400,7 +400,7 @@ python3 getdefaultqkb.py --engine compute -o json
 
 **setdefaultqkb.py**
 
-```bash
+```bash  
 python3 setdefaultqkb.py \
   --engine compute \
   --locale ENUSA \
