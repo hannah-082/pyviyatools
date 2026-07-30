@@ -1,4 +1,4 @@
-#!/usr/bin/python
+# !/usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # getdefaultqkb.py
@@ -10,7 +10,7 @@
 # Change History
 #
 # 02FEB2026 Initial version
-# 29JUL2026 Code review
+# 30JUL2026 Code review
 
 # Import Python modules
 from __future__ import print_function
